@@ -49,6 +49,17 @@ export function App() {
       .replace(/\s+(- \*\*[^:]+:\*\*)/g, '\n$1')
       .replace(/([^\n])\n(#{2,3}\s)/g, '$1\n\n$2');
   };
+  const getResponseText = (msg: ChatMessage) => formatMarkdownText(msg.ai_response.text);
+  const getResponseModel = (msg: ChatMessage) => (
+    typeof msg.ai_response.model === 'string' && msg.ai_response.model
+      ? msg.ai_response.model
+      : 'Vision marker'
+  );
+  const formatMessageTime = (value: string) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
   const renderAttachmentPreview = (filename?: string | null, filePath?: string | null, label = 'Attachment') => {
     const displayName = filename || label;
     if (filePath && isImagePath(filePath)) {
@@ -65,6 +76,8 @@ export function App() {
 
     return <div className="msg-attachment">{label}: {displayName}</div>;
   };
+  const currentSession = chatSessions.find(s => s.id === currentSessionId);
+  const currentMessages = currentSession?.messages || [];
 
   // Load initial data
   useEffect(() => {
@@ -121,7 +134,7 @@ export function App() {
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chat.messages, chat.isLoading]);
+  }, [currentMessages.length, chat.isLoading]);
 
 
   const saveSessions = (sessions: ChatSession[]) => {
@@ -316,9 +329,6 @@ export function App() {
       // Error handled
     }
   };
-
-  const currentSession = chatSessions.find(s => s.id === currentSessionId);
-  const currentMessages = currentSession?.messages || [];
 
   if (!isAuthenticated) {
     return (
@@ -553,38 +563,65 @@ export function App() {
             ) : (
               <div className="messages-list">
                 {currentMessages.map((msg) => (
-                  <div key={msg.id} className="message-pair">
+                  <article key={msg.id} className="conversation-item">
                     {msg.user_message && (
-                      <div className="message user-msg">
-                        <p>{msg.user_message}</p>
-                        {msg.dashboard_id && renderAttachmentPreview(msg.dashboard_filename, msg.dashboard_file_path, 'Visual file')}
-                        {msg.pbix_id && renderAttachmentPreview(msg.pbix_filename, msg.pbix_file_path, 'PBIX insight file')}
+                      <div className="prompt-row">
+                        <div className="message-meta">
+                          <span>You</span>
+                          <time>{formatMessageTime(msg.created_at)}</time>
+                        </div>
+                        <div className="message user-msg">
+                          <p>{msg.user_message}</p>
+                          {msg.dashboard_id && renderAttachmentPreview(msg.dashboard_filename, msg.dashboard_file_path, 'Visual file')}
+                          {msg.pbix_id && renderAttachmentPreview(msg.pbix_filename, msg.pbix_file_path, 'PBIX insight file')}
+                        </div>
                       </div>
                     )}
                     {!msg.user_message && (msg.dashboard_id || msg.pbix_id) && (
-                      <div className="message user-msg">
-                        <p className="msg-label">Grading Analysis</p>
-                        {msg.dashboard_id && renderAttachmentPreview(msg.dashboard_filename, msg.dashboard_file_path, 'Visual file')}
-                        {msg.pbix_id && renderAttachmentPreview(msg.pbix_filename, msg.pbix_file_path, 'PBIX insight file')}
+                      <div className="prompt-row">
+                        <div className="message-meta">
+                          <span>Evidence</span>
+                          <time>{formatMessageTime(msg.created_at)}</time>
+                        </div>
+                        <div className="message user-msg">
+                          <p className="msg-label">Grading analysis</p>
+                          {msg.dashboard_id && renderAttachmentPreview(msg.dashboard_filename, msg.dashboard_file_path, 'Visual file')}
+                          {msg.pbix_id && renderAttachmentPreview(msg.pbix_filename, msg.pbix_file_path, 'PBIX insight file')}
+                        </div>
                       </div>
                     )}
                     {msg.ai_response.finish_reason === 'thinking' ? (
-                      <div className="message ai-msg loading">
-                        <div className="thinking-indicator">
-                          <span></span>
-                          <span></span>
-                          <span></span>
+                      <section className="response-panel loading-panel">
+                        <div className="response-header">
+                          <div>
+                            <div className="response-kicker">Assessment response</div>
+                            <h2>Marking in progress</h2>
+                          </div>
+                          <div className="thinking-indicator" aria-label="Loading">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
                         </div>
-                        <p>Model is thinking...</p>
-                      </div>
+                        <p className="loading-copy">Reading the evidence and applying the rubric.</p>
+                      </section>
                     ) : (
-                      <div className="message ai-msg markdown-content">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {formatMarkdownText(msg.ai_response.text)}
-                        </ReactMarkdown>
-                      </div>
+                      <section className="response-panel">
+                        <div className="response-header">
+                          <div>
+                            <div className="response-kicker">Assessment response</div>
+                            <h2>Marking summary</h2>
+                          </div>
+                          <span className="model-chip">{getResponseModel(msg)}</span>
+                        </div>
+                        <div className="response-body markdown-content">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {getResponseText(msg)}
+                          </ReactMarkdown>
+                        </div>
+                      </section>
                     )}
-                  </div>
+                  </article>
                 ))}
                 <div ref={messagesEndRef} />
               </div>
