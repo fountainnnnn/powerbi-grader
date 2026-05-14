@@ -1,31 +1,35 @@
 :root {
-  --canvas: #eef1f5;
-  --workspace: #f7f8fa;
+  --canvas: #f4f3ef;
+  --canvas-deep: #eceae4;
+  --workspace: #faf9f6;
   --surface: #ffffff;
-  --surface-subtle: #f3f5f8;
-  --surface-raised: #fbfcfd;
-  --ink: #142033;
-  --ink-soft: #44546f;
-  --ink-muted: #6b778c;
-  --ink-faint: #8993a4;
-  --line: #d8dee8;
-  --line-soft: #e7ebf1;
-  --line-strong: #b8c2d1;
-  --brand: #0052cc;
-  --brand-hover: #0747a6;
-  --brand-soft: #e9f2ff;
-  --danger: #ca3521;
-  --success: #1f845a;
-  --warning: #b38600;
-  --shadow-low: 0 1px 1px rgba(9, 30, 66, 0.1), 0 0 1px rgba(9, 30, 66, 0.2);
-  --shadow-panel: 0 12px 34px rgba(9, 30, 66, 0.12);
-  --shadow-shell: 0 28px 70px rgba(9, 30, 66, 0.16);
-  --radius-xs: 3px;
-  --radius-sm: 5px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --surface-muted: #f7f6f3;
+  --surface-raised: #ffffff;
+  --ink: #202427;
+  --ink-soft: #4a4f55;
+  --ink-muted: #747a80;
+  --ink-faint: #9ca1a6;
+  --line: #dfddd7;
+  --line-soft: #ebe9e3;
+  --line-strong: #cbc8bf;
+  --brand: #202427;
+  --brand-hover: #34393e;
+  --brand-soft: #efeee9;
+  --mint: #557064;
+  --mint-soft: #edf3ec;
+  --sand: #8b7547;
+  --danger: #b42318;
+  --success: #16735f;
+  --shadow-low: 0 1px 2px rgba(32, 36, 39, 0.04);
+  --shadow-panel: 0 10px 30px rgba(32, 36, 39, 0.06);
+  --shadow-shell: 0 24px 60px rgba(32, 36, 39, 0.08);
+  --radius-xs: 4px;
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --sidebar-width: 304px;
+  --sidebar-width: 308px;
+  font-synthesis: none;
 }
 
 * {
@@ -43,20 +47,19 @@ html {
   padding: 0;
   min-height: 100%;
   color: var(--ink);
-  font-family:
-    "Segoe UI Variable",
-    "Segoe UI",
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    sans-serif;
+  font-family: "IBM Plex Sans", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  background: var(--canvas);
+}
+
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -68,14 +71,14 @@ button {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 3px solid rgba(12, 102, 228, 0.22);
+  outline: 3px solid rgba(32, 36, 39, 0.16);
   outline-offset: 2px;
 }
 
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -95,25 +98,85 @@ select:focus-visible {
   }
 }
 
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
 /* Authentication */
 .login-shell {
   min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 28px;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(0, 82, 204, 0.12), transparent 34%),
-    linear-gradient(180deg, #f8fafc 0%, #eef1f5 100%);
+  background: var(--canvas);
+}
+
+.login-card {
+  width: min(100%, 920px);
+  display: grid;
+  grid-template-columns: minmax(320px, 0.8fr) minmax(320px, 1.2fr);
+  border: 1px solid rgba(184, 195, 212, 0.78);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: var(--shadow-shell);
+  overflow: hidden;
+  animation: rise-in 320ms var(--ease) both;
 }
 
 .login-panel {
-  width: min(100%, 420px);
-  padding: 32px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: var(--shadow-shell);
-  animation: rise-in 280ms var(--ease) both;
+  padding: 34px;
+  background: #ffffff;
+}
+
+.login-visual {
+  position: relative;
+  min-height: 460px;
+  display: grid;
+  align-content: end;
+  padding: 34px;
+  border-left: 1px solid var(--line);
+  background: var(--surface-muted);
+  overflow: hidden;
+}
+
+.login-visual img {
+  position: absolute;
+  width: 760px;
+  max-width: none;
+  right: -250px;
+  top: 52px;
+  opacity: 0.72;
+  filter: none;
+}
+
+.login-visual-copy {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid rgba(216, 224, 236, 0.9);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+}
+
+.login-visual-copy span {
+  color: var(--mint);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.login-visual-copy strong {
+  max-width: 280px;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.2;
 }
 
 .login-brand,
@@ -124,7 +187,7 @@ select:focus-visible {
 }
 
 .login-brand {
-  margin-bottom: 28px;
+  margin-bottom: 36px;
 }
 
 .brand-mark {
@@ -132,20 +195,22 @@ select:focus-visible {
   height: 40px;
   display: grid;
   place-items: center;
-  border: 1px solid #c8d5ee;
-  border-radius: var(--radius-md);
-  background: linear-gradient(180deg, #ffffff, #edf3ff);
-  color: var(--brand);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  box-shadow: var(--shadow-low);
+  border-radius: 10px;
+  background: #152238;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .brand-name {
   color: var(--ink);
-  font-size: 15px;
-  font-weight: 750;
+  font-size: 14px;
+  font-weight: 700;
   line-height: 1.1;
 }
 
@@ -153,16 +218,17 @@ select:focus-visible {
   margin-top: 3px;
   color: var(--ink-muted);
   font-size: 12px;
-  font-weight: 520;
+  font-weight: 600;
 }
 
 .login-panel h1 {
-  margin: 0 0 24px;
+  max-width: 330px;
+  margin: 0 0 28px;
   color: var(--ink);
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.4px;
+  line-height: 1.12;
+  text-wrap: balance;
 }
 
 .login-panel label {
@@ -174,18 +240,18 @@ select:focus-visible {
 .login-panel span {
   color: var(--ink-soft);
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 750;
 }
 
 .login-panel input {
   width: 100%;
-  height: 42px;
+  height: 46px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  padding: 0 12px;
+  padding: 0 13px;
   background: #ffffff;
   color: var(--ink);
-  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+  transition: border-color 170ms var(--ease), box-shadow 170ms var(--ease);
 }
 
 .login-panel input:focus {
@@ -197,6 +263,7 @@ select:focus-visible {
 .error-msg {
   color: var(--danger);
   font-size: 13px;
+  font-weight: 650;
 }
 
 .login-error {
@@ -205,14 +272,15 @@ select:focus-visible {
 
 .login-submit {
   width: 100%;
-  height: 42px;
+  height: 46px;
   border-radius: var(--radius-sm);
   background: var(--brand);
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 160ms var(--ease), transform 160ms var(--ease);
+  box-shadow: none;
+  transition: background 170ms var(--ease), transform 170ms var(--ease), box-shadow 170ms var(--ease);
 }
 
 .login-submit:hover:not(:disabled) {
@@ -231,11 +299,18 @@ select:focus-visible {
 
 /* App shell */
 .app-container {
+  position: relative;
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   height: 100dvh;
   background: var(--canvas);
   overflow: hidden;
+}
+
+.sidebar,
+.main-area {
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar {
@@ -245,7 +320,7 @@ select:focus-visible {
   gap: 18px;
   padding: 18px 16px;
   border-right: 1px solid var(--line);
-  background: #f8fafc;
+  background: #faf9f6;
   overflow-y: auto;
 }
 
@@ -268,26 +343,26 @@ select:focus-visible {
 .remove-file {
   cursor: pointer;
   transition:
-    background 160ms var(--ease),
-    border-color 160ms var(--ease),
-    color 160ms var(--ease),
-    transform 160ms var(--ease),
-    box-shadow 160ms var(--ease);
+    background 170ms var(--ease),
+    border-color 170ms var(--ease),
+    color 170ms var(--ease),
+    transform 170ms var(--ease),
+    box-shadow 170ms var(--ease);
 }
 
 .new-chat-btn {
   width: 100%;
-  min-height: 40px;
+  min-height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 9px;
   border-radius: var(--radius-sm);
   background: var(--brand);
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
-  box-shadow: 0 8px 18px rgba(0, 82, 204, 0.16);
+  box-shadow: none;
 }
 
 .new-chat-btn:hover {
@@ -300,7 +375,8 @@ select:focus-visible {
 .card-btn:active,
 .nav-btn:active,
 .input-icon-btn:active,
-.send-btn:active {
+.send-btn:active,
+.remove-file:active {
   transform: scale(0.985);
 }
 
@@ -313,8 +389,7 @@ select:focus-visible {
 .card-header {
   color: var(--ink-muted);
   font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.06em;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -345,19 +420,20 @@ select:focus-visible {
   justify-content: flex-start;
   padding: 0 10px;
   font-size: 13px;
-  font-weight: 620;
+  font-weight: 700;
 }
 
 .chat-item:hover,
 .tool-item:hover {
-  background: #eef3fb;
+  background: #ffffff;
   color: var(--ink);
 }
 
 .chat-item.active {
-  border-color: #c8d5ee;
+  border-color: var(--line-strong);
   background: var(--brand-soft);
   color: var(--ink);
+  box-shadow: var(--shadow-low);
 }
 
 .chat-name-wrapper {
@@ -370,7 +446,7 @@ select:focus-visible {
   overflow: hidden;
   color: inherit;
   font-size: 13px;
-  font-weight: 620;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -380,7 +456,7 @@ select:focus-visible {
   gap: 3px;
   opacity: 0;
   transform: translateX(4px);
-  transition: opacity 160ms var(--ease), transform 160ms var(--ease);
+  transition: opacity 170ms var(--ease), transform 170ms var(--ease);
 }
 
 .chat-item:hover .chat-actions,
@@ -452,12 +528,12 @@ select:focus-visible {
   background: #ffffff;
   color: var(--ink);
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 750;
 }
 
 .card-btn:hover {
   border-color: var(--line-strong);
-  background: #f4f7fb;
+  background: var(--surface-muted);
 }
 
 .card-upload {
@@ -478,8 +554,8 @@ select:focus-visible {
   background: #ffffff;
   color: var(--ink-muted);
   font-size: 13px;
-  font-weight: 650;
-  transition: background 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease);
+  font-weight: 700;
+  transition: background 170ms var(--ease), border-color 170ms var(--ease), color 170ms var(--ease);
 }
 
 .card-upload:hover .upload-placeholder {
@@ -493,7 +569,7 @@ select:focus-visible {
   min-width: 0;
   min-height: 0;
   display: grid;
-  grid-template-rows: 64px minmax(0, 1fr);
+  grid-template-rows: 66px minmax(0, 1fr);
   overflow: hidden;
 }
 
@@ -502,10 +578,9 @@ select:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0 24px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(247, 248, 250, 0.92);
-  backdrop-filter: blur(18px);
+  padding: 0 26px;
+  border-bottom: 1px solid rgba(216, 224, 236, 0.9);
+  background: #faf9f6;
 }
 
 .nav-title {
@@ -513,9 +588,8 @@ select:focus-visible {
   margin: 0;
   overflow: hidden;
   color: var(--ink);
-  font-size: 17px;
-  font-weight: 720;
-  letter-spacing: -0.2px;
+  font-size: 16px;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -540,8 +614,9 @@ select:focus-visible {
 
 .nav-btn:hover {
   border-color: var(--line-strong);
-  background: #f4f7fb;
+  background: #ffffff;
   color: var(--ink);
+  box-shadow: var(--shadow-low);
 }
 
 .nav-btn.text-btn {
@@ -565,45 +640,47 @@ select:focus-visible {
   overflow-x: hidden;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  padding: 30px clamp(18px, 4vw, 54px);
+  padding: 24px clamp(18px, 4vw, 48px);
   scroll-padding-bottom: 28px;
 }
 
 .messages-list {
-  width: min(100%, 1080px);
+  width: min(100%, 1120px);
   min-width: 0;
   margin: 0 auto;
   display: grid;
-  gap: 22px;
-  padding-bottom: 12px;
+  gap: 24px;
+  padding-bottom: 14px;
 }
 
 .conversation-item {
   min-width: 0;
   display: grid;
   gap: 12px;
-  animation: rise-in 220ms var(--ease) both;
+  animation: rise-in 230ms var(--ease) both;
 }
 
 .prompt-row {
   min-width: 0;
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 106px minmax(0, 1fr);
+  gap: 14px;
   align-items: start;
 }
 
 .message-meta {
-  padding-top: 9px;
+  padding-top: 10px;
   color: var(--ink-muted);
-  font-size: 12px;
-  line-height: 1.3;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .message-meta span {
   display: block;
   color: var(--ink-soft);
-  font-weight: 750;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-weight: 700;
 }
 
 .message-meta time {
@@ -616,7 +693,7 @@ select:focus-visible {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  line-height: 1.55;
+  line-height: 1.58;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -627,8 +704,8 @@ select:focus-visible {
 
 .user-msg {
   justify-self: start;
-  width: min(100%, 780px);
-  padding: 12px 14px;
+  width: min(100%, 800px);
+  padding: 13px 15px;
   background: #ffffff;
   color: var(--ink);
   box-shadow: var(--shadow-low);
@@ -636,17 +713,29 @@ select:focus-visible {
 
 .msg-label {
   color: var(--ink-soft);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .response-panel {
+  position: relative;
   min-width: 0;
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow-panel);
+}
+
+.response-panel::before {
+  display: none;
+}
+
+.response-header,
+.response-body,
+.loading-copy {
+  position: relative;
 }
 
 .response-header {
@@ -654,39 +743,38 @@ select:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 18px;
+  padding: 14px 18px;
   border-bottom: 1px solid var(--line-soft);
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  background: #ffffff;
 }
 
 .response-kicker {
   margin-bottom: 3px;
   color: var(--brand);
   font-size: 11px;
-  font-weight: 780;
-  letter-spacing: 0.06em;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
 .response-header h2 {
   margin: 0;
   color: var(--ink);
-  font-size: 17px;
-  font-weight: 740;
-  letter-spacing: -0.2px;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .model-chip {
   flex: 0 0 auto;
-  max-width: 180px;
+  max-width: 190px;
   overflow: hidden;
-  border: 1px solid #c8d5ee;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 5px 9px;
+  padding: 6px 10px;
   background: var(--brand-soft);
-  color: #09326c;
-  font-size: 12px;
-  font-weight: 650;
+  color: var(--ink-soft);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -702,7 +790,7 @@ select:focus-visible {
 
 .loading-copy {
   margin: 0;
-  padding: 0 18px 18px;
+  padding: 0 20px 20px;
   color: var(--ink-muted);
   font-size: 14px;
 }
@@ -733,7 +821,7 @@ select:focus-visible {
   max-width: 100%;
   color: var(--ink);
   font-size: 14px;
-  line-height: 1.62;
+  line-height: 1.66;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -745,10 +833,11 @@ select:focus-visible {
 .markdown-content h1,
 .markdown-content h2,
 .markdown-content h3 {
-  margin: 22px 0 10px;
+  margin: 24px 0 10px;
   color: var(--ink);
   line-height: 1.22;
-  letter-spacing: -0.25px;
+  font-weight: 800;
+  text-wrap: balance;
 }
 
 .markdown-content h1:first-child,
@@ -774,7 +863,7 @@ select:focus-visible {
 
 .markdown-content strong {
   color: var(--ink);
-  font-weight: 740;
+  font-weight: 800;
 }
 
 .markdown-content pre {
@@ -783,10 +872,11 @@ select:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 12px;
-  background: #f2f4f8;
+  background: var(--surface-muted);
 }
 
 .markdown-content code {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
   white-space: pre-wrap;
 }
 
@@ -802,18 +892,13 @@ select:focus-visible {
   background: #ffffff;
   font-size: 13px;
   white-space: normal;
-}
-
-.markdown-content thead,
-.markdown-content tbody,
-.markdown-content tr {
-  width: 100%;
+  box-shadow: var(--shadow-low);
 }
 
 .markdown-content th,
 .markdown-content td {
   min-width: 128px;
-  padding: 10px 12px;
+  padding: 11px 12px;
   border-right: 1px solid var(--line-soft);
   border-bottom: 1px solid var(--line-soft);
   text-align: left;
@@ -821,9 +906,9 @@ select:focus-visible {
 }
 
 .markdown-content th {
-  background: #f4f7fb;
+  background: #eef2f8;
   color: var(--ink);
-  font-weight: 750;
+  font-weight: 800;
 }
 
 .markdown-content td {
@@ -847,6 +932,7 @@ select:focus-visible {
 .msg-attachment {
   color: var(--ink-muted);
   font-size: 12px;
+  font-weight: 650;
 }
 
 .attachment-thumbnail,
@@ -860,41 +946,53 @@ select:focus-visible {
 }
 
 .welcome-state {
-  max-width: 760px;
-  margin: 10vh auto 0;
-  padding: 0 4px;
-  animation: rise-in 260ms var(--ease) both;
+  width: min(100%, 880px);
+  margin: 5vh auto 0;
+  padding: 0 4px 32px;
+  animation: rise-in 280ms var(--ease) both;
+}
+
+.welcome-asset {
+  width: min(100%, 420px);
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.welcome-asset img {
+  display: block;
+  width: 100%;
 }
 
 .welcome-title {
   max-width: 620px;
   color: var(--ink);
-  font-size: clamp(38px, 5vw, 58px);
-  font-weight: 760;
-  line-height: 1.02;
-  letter-spacing: -1.4px;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.12;
   text-wrap: balance;
 }
 
 .welcome-subtitle {
   margin-top: 16px;
-  max-width: 520px;
+  max-width: 540px;
   color: var(--ink-soft);
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
 /* Composer */
 .chat-input-area {
   border-top: 1px solid var(--line);
-  background: rgba(247, 248, 250, 0.94);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 -14px 34px rgba(9, 30, 66, 0.08);
-  padding: 14px clamp(18px, 4vw, 54px) 18px;
+  background: #faf9f6;
+  box-shadow: none;
+  padding: 14px clamp(18px, 4vw, 56px) 18px;
 }
 
 .chat-input-area > * {
-  width: min(100%, 1080px);
+  width: min(100%, 1120px);
   margin-left: auto;
   margin-right: auto;
 }
@@ -917,6 +1015,7 @@ select:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: #ffffff;
+  box-shadow: none;
 }
 
 .file-preview-image {
@@ -936,6 +1035,7 @@ select:focus-visible {
   overflow: hidden;
   color: var(--ink-soft);
   font-size: 13px;
+  font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -950,6 +1050,7 @@ select:focus-visible {
   background: #ffffff;
   color: var(--ink-muted);
   padding: 0;
+  font-weight: 800;
 }
 
 .remove-file:hover {
@@ -970,11 +1071,11 @@ select:focus-visible {
   background: #ffffff;
   color: var(--ink);
   color-scheme: light;
-  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+  transition: border-color 170ms var(--ease), box-shadow 170ms var(--ease);
 }
 
 .student-name-input {
-  height: 38px;
+  height: 40px;
   padding: 0 12px;
 }
 
@@ -986,15 +1087,15 @@ select:focus-visible {
 
 .input-form {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 46px minmax(0, 1fr) 46px;
   align-items: center;
   gap: 10px;
 }
 
 .input-icon-btn,
 .send-btn {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   display: grid;
   place-items: center;
   border-radius: var(--radius-sm);
@@ -1009,12 +1110,12 @@ select:focus-visible {
 
 .input-icon-btn:hover {
   border-color: var(--line-strong);
-  background: #f4f7fb;
+  background: var(--surface-muted);
   color: var(--ink);
 }
 
 .message-input {
-  height: 44px;
+  height: 46px;
   padding: 0 14px;
   font-size: 15px;
 }
@@ -1027,6 +1128,7 @@ select:focus-visible {
 .send-btn {
   background: var(--brand);
   color: #ffffff;
+  box-shadow: none;
 }
 
 .send-btn:hover:not(:disabled) {
@@ -1064,7 +1166,7 @@ select:focus-visible {
 .markdown-content pre::-webkit-scrollbar-thumb {
   border: 3px solid transparent;
   border-radius: 999px;
-  background: rgba(68, 84, 111, 0.28);
+  background: rgba(64, 80, 100, 0.3);
   background-clip: content-box;
 }
 
@@ -1076,6 +1178,24 @@ select:focus-visible {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .login-card {
+    grid-template-columns: 1fr;
+  }
+
+  .login-visual {
+    min-height: 300px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .login-visual img {
+    width: 620px;
+    right: -180px;
+    top: 24px;
   }
 }
 
@@ -1114,14 +1234,33 @@ select:focus-visible {
   }
 
   .welcome-title {
-    font-size: 40px;
-    letter-spacing: -1px;
+    font-size: 34px;
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 620px) {
+  .login-shell {
+    padding: 16px;
+  }
+
+  .login-card {
+    border-radius: 18px;
+  }
+
   .login-panel {
     padding: 24px;
+  }
+
+  .login-visual {
+    display: none;
+  }
+
+  .login-panel h1 {
+    font-size: 29px;
+  }
+
+  .nav-btn.text-btn {
+    display: none;
   }
 
   .response-header {
@@ -1129,8 +1268,20 @@ select:focus-visible {
     flex-direction: column;
   }
 
-  .response-body {
-    padding: 14px;
+  .model-chip {
+    max-width: 100%;
+  }
+
+  .welcome-state {
+    margin-top: 28px;
+  }
+
+  .welcome-asset {
+    margin-bottom: 22px;
+  }
+
+  .welcome-title {
+    font-size: 30px;
   }
 
   .input-form {
@@ -1139,13 +1290,8 @@ select:focus-visible {
   }
 
   .input-icon-btn,
-  .send-btn,
-  .message-input {
-    height: 42px;
-  }
-
-  .input-icon-btn,
   .send-btn {
     width: 42px;
+    height: 42px;
   }
 }

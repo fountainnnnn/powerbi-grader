@@ -3,21 +3,21 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f4f3ef;
 }
 
 .login-box {
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 18px rgba(32, 36, 39, 0.05);
   width: 100%;
   max-width: 400px;
 }
 
 .login-box h2 {
   margin-bottom: 1.5rem;
-  color: #333;
+  color: #202427;
   text-align: center;
   font-size: 24px;
 }
@@ -36,7 +36,7 @@
 
 .form-group label {
   font-weight: 500;
-  color: #333;
+  color: #202427;
   font-size: 14px;
 }
 
@@ -49,13 +49,13 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #202427;
+  box-shadow: 0 0 0 3px rgba(32, 36, 39, 0.1);
 }
 
 .submit-btn {
   padding: 10px;
-  background-color: #667eea;
+  background-color: #202427;
   color: white;
   font-weight: 500;
   border: none;
@@ -66,7 +66,7 @@
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #5568d3;
+  background-color: #34393e;
 }
 
 .submit-btn:disabled {
@@ -98,7 +98,7 @@
 .toggle-btn {
   background: none;
   border: none;
-  color: #667eea;
+  color: #202427;
   text-decoration: underline;
   cursor: pointer;
   padding: 0;
@@ -107,5 +107,5 @@
 }
 
 .toggle-btn:hover {
-  color: #5568d3;
+  color: #34393e;
 }

@@ -12,8 +12,9 @@ body,
 }
 
 body {
-  background: #eceff3;
-  color: #151922;
+  background: #f4f3ef;
+  color: #202427;
+  font-family: "IBM Plex Sans", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
 }
 
 button,

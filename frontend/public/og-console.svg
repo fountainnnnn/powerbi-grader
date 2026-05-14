@@ -1,0 +1,18 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#EEF2F7"/>
+  <rect x="92" y="78" width="1016" height="474" rx="28" fill="#FBFCFF" stroke="#D8E0EC"/>
+  <rect x="132" y="118" width="72" height="72" rx="18" fill="#152238"/>
+  <path d="M150 139H166C176 139 182 145 182 154.5C182 164 176 170 166 170H150V139Z" fill="#F6F8FC"/>
+  <path d="M177 139H193V148H188V170H177V139Z" fill="#B9C0C8"/>
+  <path d="M149 178H194" stroke="#D7DDD7" stroke-width="5" stroke-linecap="round"/>
+  <text x="236" y="158" fill="#202427" font-family="IBM Plex Sans, Arial, sans-serif" font-size="40" font-weight="700">Power BI Grader</text>
+  <text x="238" y="196" fill="#747A80" font-family="IBM Plex Sans, Arial, sans-serif" font-size="22" font-weight="500">A strict assessment review console for Power BI evidence.</text>
+  <rect x="148" y="264" width="904" height="214" rx="18" fill="#F6F8FC" stroke="#DCE3F0"/>
+  <path d="M196 326H486" stroke="#152238" stroke-width="18" stroke-linecap="round"/>
+  <path d="M196 382H398" stroke="#5D6A7D" stroke-width="14" stroke-linecap="round"/>
+  <path d="M196 432H438" stroke="#5D6A7D" stroke-opacity=".72" stroke-width="14" stroke-linecap="round"/>
+  <rect x="700" y="314" width="208" height="42" rx="21" fill="#E7EDFF"/>
+  <rect x="700" y="384" width="154" height="42" rx="21" fill="#DDF8EE"/>
+  <path d="M942 335H1008" stroke="#8E969E" stroke-width="12" stroke-linecap="round"/>
+  <path d="M942 405H990" stroke="#9EAEA4" stroke-width="12" stroke-linecap="round"/>
+</svg>

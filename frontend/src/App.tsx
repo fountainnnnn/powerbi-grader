@@ -333,43 +333,54 @@ export function App() {
   if (!isAuthenticated) {
     return (
       <div className="login-shell">
-        <form className="login-panel" onSubmit={handleLogin}>
-          <div className="login-brand">
-            <div className="brand-mark">PG</div>
-            <div>
-              <div className="brand-name">Power BI Grader</div>
-              <div className="brand-meta">Assessment review console</div>
+        <div className="login-card">
+          <form className="login-panel" onSubmit={handleLogin}>
+            <div className="login-brand">
+              <div className="brand-mark" aria-hidden="true">
+                <img src="/grader-mark.svg" alt="" />
+              </div>
+              <div>
+                <div className="brand-name">Power BI Grader</div>
+                <div className="brand-meta">Assessment review console</div>
+              </div>
             </div>
-          </div>
-          <h1>Sign in</h1>
-          <label>
-            <span>Username</span>
-            <input
-              type="text"
-              value={loginUsername}
-              onChange={(e) => setLoginUsername(e.target.value)}
-              autoComplete="username"
-              autoFocus
-            />
-          </label>
-          <label>
-            <span>Password</span>
-            <input
-              type="password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-          </label>
-          {loginError && <div className="login-error">{loginError}</div>}
-          <button
-            type="submit"
-            className="login-submit"
-            disabled={isLoggingIn || !loginUsername.trim() || !loginPassword}
-          >
-            {isLoggingIn ? 'Checking...' : 'Enter'}
-          </button>
-        </form>
+            <h1>Sign in to the grading console</h1>
+            <label>
+              <span>Username</span>
+              <input
+                type="text"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                autoComplete="username"
+                autoFocus
+              />
+            </label>
+            <label>
+              <span>Password</span>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+            </label>
+            {loginError && <div className="login-error">{loginError}</div>}
+            <button
+              type="submit"
+              className="login-submit"
+              disabled={isLoggingIn || !loginUsername.trim() || !loginPassword}
+            >
+              {isLoggingIn ? 'Checking...' : 'Enter console'}
+            </button>
+          </form>
+          <aside className="login-visual" aria-hidden="true">
+            <img src="/assessment-field.svg" alt="" />
+            <div className="login-visual-copy">
+              <span>Rubric-linked review</span>
+              <strong>Evidence in. Strict marks out.</strong>
+            </div>
+          </aside>
+        </div>
       </div>
     );
   }
@@ -385,7 +396,9 @@ export function App() {
       <aside className="sidebar">
         <div className="sidebar-brand">
           <div className="brand-lockup">
-            <div className="brand-mark">PG</div>
+            <div className="brand-mark" aria-hidden="true">
+              <img src="/grader-mark.svg" alt="" />
+            </div>
             <div>
               <div className="brand-name">Power BI Grader</div>
               <div className="brand-meta">Grader Console</div>
@@ -557,6 +570,9 @@ export function App() {
           <div className="messages-wrapper">
             {currentMessages.length === 0 ? (
               <div className="welcome-state">
+                <div className="welcome-asset" aria-hidden="true">
+                  <img src="/assessment-field.svg" alt="" />
+                </div>
                 <div className="welcome-title">Start a conversation</div>
                 <div className="welcome-subtitle">Upload the assessment brief, attach dashboard evidence, then run a strict marking pass.</div>
               </div>
