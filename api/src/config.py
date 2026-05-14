@@ -1,12 +1,13 @@
 import os
-from pathlib import Path
 import tempfile
+from pathlib import Path
 
 from pydantic_settings import BaseSettings
 
-
 IS_VERCEL = bool(os.getenv("VERCEL"))
 TEMP_DIR = Path(tempfile.gettempdir())
+API_DIR = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = API_DIR.parent
 
 
 class Settings(BaseSettings):
@@ -44,8 +45,8 @@ class Settings(BaseSettings):
     max_pdf_pages: int = 10
 
     class Config:
-        # Look for .env in project root and current directory
-        env_file = str(Path(__file__).parent.parent.parent / ".env")
+        # Load root .env for local launcher use, with api/.env as an optional override.
+        env_file = (str(PROJECT_ROOT / ".env"), str(API_DIR / ".env"))
         case_sensitive = False
         extra = "ignore"
 

@@ -13,6 +13,22 @@ if not exist "%ROOT%.env" (
     exit /b 1
 )
 
+findstr /b /c:"APP_LOGIN_USERNAME=" "%ROOT%.env" >nul 2>nul
+if errorlevel 1 (
+    echo APP_LOGIN_USERNAME is missing from .env.
+    echo Add APP_LOGIN_USERNAME and APP_LOGIN_PASSWORD to .env before starting.
+    pause
+    exit /b 1
+)
+
+findstr /b /c:"APP_LOGIN_PASSWORD=" "%ROOT%.env" >nul 2>nul
+if errorlevel 1 (
+    echo APP_LOGIN_PASSWORD is missing from .env.
+    echo Add APP_LOGIN_USERNAME and APP_LOGIN_PASSWORD to .env before starting.
+    pause
+    exit /b 1
+)
+
 if not exist "%API_DIR%\pyproject.toml" (
     echo Backend folder not found: %API_DIR%
     pause

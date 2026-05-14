@@ -324,7 +324,13 @@ export function App() {
     return (
       <div className="login-shell">
         <form className="login-panel" onSubmit={handleLogin}>
-          <div className="login-mark">Grader</div>
+          <div className="login-brand">
+            <div className="brand-mark">PG</div>
+            <div>
+              <div className="brand-name">Power BI Grader</div>
+              <div className="brand-meta">Assessment review console</div>
+            </div>
+          </div>
           <h1>Sign in</h1>
           <label>
             <span>Username</span>
@@ -368,7 +374,13 @@ export function App() {
       {/* SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div className="brand-text">Grader</div>
+          <div className="brand-lockup">
+            <div className="brand-mark">PG</div>
+            <div>
+              <div className="brand-name">Power BI Grader</div>
+              <div className="brand-meta">Grader Console</div>
+            </div>
+          </div>
         </div>
 
         <button onClick={createNewChat} className="new-chat-btn">
