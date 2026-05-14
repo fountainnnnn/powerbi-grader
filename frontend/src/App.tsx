@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useRubric } from './hooks/useRubric';
 import { useChat } from './hooks/useChat';
-import { apiClient } from './services/api';
+import { API_URL, apiClient } from './services/api';
 import { Dashboard, ChatMessage } from './types/api';
 import './styles/App.css';
 
@@ -35,7 +35,7 @@ export function App() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const apiBaseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:8000');
+  const apiBaseUrl = API_URL;
   const getFileName = (filePath?: string | null) => filePath?.split('\\').pop()?.split('/').pop() || '';
   const getUploadUrl = (filePath?: string | null) => (
     filePath?.startsWith('blob:') ? filePath : `${apiBaseUrl}/uploads/${getFileName(filePath)}`
@@ -536,7 +536,7 @@ export function App() {
             {currentMessages.length === 0 ? (
               <div className="welcome-state">
                 <div className="welcome-title">Start a conversation</div>
-                <div className="welcome-subtitle">Upload a rubric and attach documents to begin</div>
+                <div className="welcome-subtitle">Upload the assessment brief, attach dashboard evidence, then run a strict marking pass.</div>
               </div>
             ) : (
               <div className="messages-list">
@@ -599,7 +599,7 @@ export function App() {
                     <div className="file-preview-info">
                       <span className="file-preview-name">Visual: {attachedFile.filename}</span>
                       <button onClick={() => setAttachedFile(null)} className="remove-file" title="Remove attachment">
-                        ✕
+                        x
                       </button>
                     </div>
                   </div>
@@ -609,7 +609,7 @@ export function App() {
                     <div className="file-preview-info">
                       <span className="file-preview-name">PBIX: {attachedPbixFile.filename}</span>
                       <button onClick={() => { setAttachedPbixFile(null); setDetectedStudents([]); setStudentName(''); }} className="remove-file" title="Remove PBIX attachment">
-                        ✕
+                        x
                       </button>
                     </div>
                   </div>
@@ -635,7 +635,7 @@ export function App() {
                   type="text"
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
-                  placeholder="Student name (e.g. Student A)"
+                  placeholder="Student name, or leave blank for all students"
                   className="student-name-input"
                   disabled={chat.isLoading}
                 />
@@ -670,7 +670,7 @@ export function App() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Type your question..."
+                placeholder="Ask for marking, feedback, or evidence checks..."
                 disabled={chat.isLoading}
                 className="message-input"
                 autoFocus
