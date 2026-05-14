@@ -1,9 +1,69 @@
-from pathlib import Path
-
 from src.services.pbix_inspector import pbix_inspector
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-INDIVIDUAL_TEMPLATE_PBIX = PROJECT_ROOT / "individual_template.pbix"
+
+def named_individual_inspection() -> dict:
+    return {
+        "file_name": "synthetic-individual.pbix",
+        "pages": [
+            {
+                "display_name": "Ng Yu Hang_Individual",
+                "visuals": [
+                    {
+                        "visual_type": "areaChart",
+                        "fields": [
+                            "Transactions.Age",
+                            "Transactions.Gender",
+                            "Sum(Transactions.Amount Spent/Month)",
+                        ],
+                        "text_content": [
+                            {
+                                "text": "Sum of Amount Spent/Month by Age and Gender",
+                                "source": "config.singleVisual.vcObjects.title",
+                            },
+                            {"text": "16D", "source": "formatting.fontSize"},
+                        ],
+                    },
+                    {
+                        "visual_type": "stackedBarChart",
+                        "fields": [
+                            "Building.Year",
+                            "Sum(Building.Energy Use Intensity (kWh/m2/year))",
+                        ],
+                        "text_content": [
+                            {
+                                "text": (
+                                    "Sum of Energy Use Intensity "
+                                    "(kWh/m2/year) by Year"
+                                ),
+                                "source": "config.singleVisual.vcObjects.title",
+                            }
+                        ],
+                    },
+                ],
+            },
+            {
+                "display_name": "Individual Insights",
+                "visuals": [
+                    {
+                        "visual_type": "textbox",
+                        "fields": [],
+                        "text_content": [
+                            {"text": "[Ng Yu Hang]:"},
+                            {"text": "The two visuals I chose are listed below."},
+                            {
+                                "text": (
+                                    "Sum of Amount Spent/Month by Age and Gender "
+                                    "(Area Chart) and Sum of Energy Use "
+                                    "Intensity (kWh/m2/year) by Year "
+                                    "(Stacked Bar Chart)."
+                                )
+                            },
+                        ],
+                    }
+                ],
+            },
+        ],
+    }
 
 
 def test_sample_students_and_owned_visuals_from_structural_labels() -> None:
@@ -88,7 +148,7 @@ def test_sample_students_and_owned_visuals_from_structural_labels() -> None:
 
 
 def test_student_named_individual_page_extracts_declared_visuals_and_insights() -> None:
-    inspection = pbix_inspector.inspect(str(INDIVIDUAL_TEMPLATE_PBIX))
+    inspection = named_individual_inspection()
 
     assert pbix_inspector.extract_student_names(inspection) == ["Ng Yu Hang"]
 
@@ -106,7 +166,7 @@ def test_student_named_individual_page_extracts_declared_visuals_and_insights() 
 
 
 def test_prompt_evidence_names_declared_visuals_as_attribution_signal() -> None:
-    inspection = pbix_inspector.inspect(str(INDIVIDUAL_TEMPLATE_PBIX))
+    inspection = named_individual_inspection()
 
     prompt = pbix_inspector.format_student_evidence_for_prompt(inspection, "Ng Yu Hang")
 
