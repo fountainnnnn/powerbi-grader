@@ -18,6 +18,11 @@ export function App() {
   const rubric = useRubric();
   const chat = useChat();
 
+  const [isAuthenticated, setIsAuthenticated] = useState(apiClient.isAuthenticated());
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [attachedFile, setAttachedFile] = useState<Dashboard | null>(null);
@@ -63,12 +68,14 @@ export function App() {
 
   // Load initial data
   useEffect(() => {
+    if (!isAuthenticated) return;
     rubric.loadRubric();
     chat.loadHistory();
-  }, []);
+  }, [isAuthenticated]);
 
   // After backend history is loaded, sync with sessions
   useEffect(() => {
+    if (!isAuthenticated) return;
     const stored = localStorage.getItem('chatSessions');
 
     if (stored) {
@@ -109,7 +116,7 @@ export function App() {
       setChatSessions([newSession]);
       setCurrentSessionId(newSession.id);
     }
-  }, [chat.messages]);
+  }, [chat.messages, isAuthenticated]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -120,6 +127,33 @@ export function App() {
   const saveSessions = (sessions: ChatSession[]) => {
     localStorage.setItem('chatSessions', JSON.stringify(sessions));
     setChatSessions(sessions);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    setIsLoggingIn(true);
+    try {
+      await apiClient.login(loginUsername.trim(), loginPassword);
+      setIsAuthenticated(true);
+      setLoginPassword('');
+    } catch (err) {
+      setLoginError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleLogout = () => {
+    apiClient.logout();
+    setIsAuthenticated(false);
+    setChatSessions([]);
+    setCurrentSessionId(null);
+    setAttachedFile(null);
+    setAttachedPbixFile(null);
+    setDetectedStudents([]);
+    setStudentName('');
+    chat.clearChat();
   };
 
   const createNewChat = () => {
@@ -286,6 +320,44 @@ export function App() {
   const currentSession = chatSessions.find(s => s.id === currentSessionId);
   const currentMessages = currentSession?.messages || [];
 
+  if (!isAuthenticated) {
+    return (
+      <div className="login-shell">
+        <form className="login-panel" onSubmit={handleLogin}>
+          <div className="login-mark">Grader</div>
+          <h1>Sign in</h1>
+          <label>
+            <span>Username</span>
+            <input
+              type="text"
+              value={loginUsername}
+              onChange={(e) => setLoginUsername(e.target.value)}
+              autoComplete="username"
+              autoFocus
+            />
+          </label>
+          <label>
+            <span>Password</span>
+            <input
+              type="password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+          </label>
+          {loginError && <div className="login-error">{loginError}</div>}
+          <button
+            type="submit"
+            className="login-submit"
+            disabled={isLoggingIn || !loginUsername.trim() || !loginPassword}
+          >
+            {isLoggingIn ? 'Checking...' : 'Enter'}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
   if (!currentSessionId && chatSessions.length === 0) {
     setTimeout(createNewChat, 0);
     return <div />;
@@ -430,6 +502,9 @@ export function App() {
         <nav className="top-nav">
           <h1 className="nav-title">{currentSession?.name || 'Chat'}</h1>
           <div className="nav-actions">
+            <button onClick={handleLogout} className="nav-btn text-btn" title="Sign out">
+              Sign out
+            </button>
             <button onClick={() => exportChat()} className="nav-btn" title="Export">
               <svg width="22" height="22" viewBox="0 0 16 16" fill="none">
                 <path d="M8 2v10M4 9l4 4 4-4M2 14h12" stroke="currentColor" strokeWidth="1.2"/>

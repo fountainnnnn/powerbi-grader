@@ -6,6 +6,7 @@ import {
   ChatMessage,
   ChatHistoryResponse,
   ApiError,
+  LoginResponse,
 } from '../types/api';
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:8000');
@@ -19,6 +20,7 @@ class ApiClient {
   private localRubricFile: File | null = null;
   private localFiles = new Map<string, File>();
   private localRubric: Rubric | null = null;
+  private token: string | null = localStorage.getItem('authToken');
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -37,9 +39,46 @@ class ApiClient {
   }
 
   private getHeaders(): HeadersInit {
-    return {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+    return headers;
+  }
+
+  private getAuthHeaders(): HeadersInit {
+    return this.token ? { Authorization: `Bearer ${this.token}` } : {};
+  }
+
+  isAuthenticated(): boolean {
+    return Boolean(this.token);
+  }
+
+  async login(username: string, password: string): Promise<LoginResponse> {
+    const response = await fetch(`${this.baseUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (!response.ok) {
+      const error: ApiError = await response.json();
+      throw new Error(error.detail || `Login failed: ${response.status}`);
+    }
+
+    const data: LoginResponse = await response.json();
+    this.token = data.access_token;
+    localStorage.setItem('authToken', data.access_token);
+    localStorage.setItem('authUsername', data.username);
+    return data;
+  }
+
+  logout(): void {
+    this.token = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('authUsername');
   }
 
   private async request<T>(
@@ -86,6 +125,7 @@ class ApiClient {
     const url = `${this.baseUrl}/rubric/upload`;
     const response = await fetch(url, {
       method: 'POST',
+      headers: this.getAuthHeaders(),
       body: formData,
     });
 
@@ -135,6 +175,7 @@ class ApiClient {
     const url = `${this.baseUrl}/dashboards/upload`;
     const response = await fetch(url, {
       method: 'POST',
+      headers: this.getAuthHeaders(),
       body: formData,
     });
 
@@ -185,6 +226,7 @@ class ApiClient {
       formData.append('file', file);
       const response = await fetch(`${this.baseUrl}/students`, {
         method: 'POST',
+        headers: this.getAuthHeaders(),
         body: formData,
       });
       if (!response.ok) {
@@ -213,6 +255,7 @@ class ApiClient {
 
       const response = await fetch(`${this.baseUrl}/grade`, {
         method: 'POST',
+        headers: this.getAuthHeaders(),
         body: formData,
       });
       if (!response.ok) {

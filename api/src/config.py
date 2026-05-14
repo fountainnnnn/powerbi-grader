@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     # API
     api_port: int = 8000
     api_secret_key: str = ""
+    app_login_username: str = ""
+    app_login_password: str = ""
     debug: bool = True
 
     # OpenAI API
